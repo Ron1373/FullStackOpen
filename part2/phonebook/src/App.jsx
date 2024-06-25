@@ -3,17 +3,18 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import axios from "axios";
+import contacts from "./services/contacts";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filterData, setFilterData] = useState("");
-  const [filteredArray, setFilteredArray] = useState(persons);
+  const [filteredArray, setFilteredArray] = useState();
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    contacts.getAll().then((contactData) => {
+      setPersons(contactData);
     });
   }, []);
   const inputNewName = (event) => {
@@ -29,25 +30,52 @@ const App = () => {
     let notANewName = false;
     persons.forEach((person) => {
       if (person.name === newNameObject.name) {
-        alert(`${newName} is already added to phonebook`);
+        if (
+          window.confirm(
+            `${newName} is already added to phonebook, replace old number with new one?`
+          )
+        ) {
+          contacts.update(person.id, newNameObject).then((updatedContact) => {
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : updatedContact))
+            );
+            setNewName("");
+            setNewPhone("");
+          });
+        }
         notANewName = true;
       }
     });
     if (notANewName) {
       return;
     }
-    setPersons(persons.concat(newNameObject));
-    setFilteredArray(persons);
 
-    setNewName("");
-    setNewPhone("");
+    contacts.create(newNameObject).then((returnedContact) => {
+      console.log(returnedContact);
+      setPersons(persons.concat(returnedContact));
+
+      setNewName("");
+      setNewPhone("");
+    });
   };
   const filterName = (event) => {
     setFilterData(event.target.value.toLowerCase());
-    const newFilteredArray = persons.filter((person) =>
-      person.name.toLowerCase().includes(filterData)
-    );
-    setFilteredArray(newFilteredArray);
+    if (!event.target.value) {
+      setFilteredArray();
+    } else {
+      setFilteredArray(
+        persons.filter((person) =>
+          person.name.toLowerCase().includes(filterData)
+        )
+      );
+    }
+  };
+
+  const deleteContact = (event) => {
+    if (window.confirm(`delete ${event.target.name}`)) {
+      contacts.remove(event.target.id);
+      setPersons(persons.filter((person) => person.id !== event.target.id));
+    }
   };
   return (
     <div>
@@ -64,7 +92,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons data={filteredArray} />
+      <Persons data={filteredArray || persons} deleteContact={deleteContact} />
     </div>
   );
 };
