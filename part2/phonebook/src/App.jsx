@@ -11,6 +11,12 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [filterData, setFilterData] = useState("");
   const [filteredArray, setFilteredArray] = useState();
+  const [notificationMessage, setNotificationMessage] = useState("");
+
+  const Notification = (message) => {
+    if (message === null) return null;
+    return <div className="notification-message">{notificationMessage}</div>;
+  };
 
   useEffect(() => {
     contacts.getAll().then((contactData) => {
@@ -35,13 +41,22 @@ const App = () => {
             `${newName} is already added to phonebook, replace old number with new one?`
           )
         ) {
-          contacts.update(person.id, newNameObject).then((updatedContact) => {
-            setPersons(
-              persons.map((p) => (p.id !== person.id ? p : updatedContact))
+          contacts
+            .update(person.id, newNameObject)
+            .then((updatedContact) => {
+              setPersons(
+                persons.map((p) => (p.id !== person.id ? p : updatedContact))
+              );
+              setNewName("");
+              setNewPhone("");
+              setNotificationMessage(`${newName}'s number was changed`);
+              setTimeout(() => setNotificationMessage(""), 5000);
+            })
+            .catch((error) =>
+              setNotificationMessage(
+                `${newName} has already been removed from server`
+              )
             );
-            setNewName("");
-            setNewPhone("");
-          });
         }
         notANewName = true;
       }
@@ -56,6 +71,8 @@ const App = () => {
 
       setNewName("");
       setNewPhone("");
+      setNotificationMessage(`${newNameObject.name}'s contact was added`);
+      setTimeout(() => setNotificationMessage(""), 5000);
     });
   };
   const filterName = (event) => {
@@ -74,12 +91,14 @@ const App = () => {
   const deleteContact = (event) => {
     if (window.confirm(`delete ${event.target.name}`)) {
       contacts.remove(event.target.id);
+
       setPersons(persons.filter((person) => person.id !== event.target.id));
     }
   };
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter data={filterData} handleChange={filterName} />
 
       <h2>add a new</h2>
