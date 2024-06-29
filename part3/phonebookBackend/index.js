@@ -1,6 +1,13 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 app.use(express.json());
+
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :content"
+  )
+);
 let persons = [
   {
     id: "1",
@@ -24,6 +31,10 @@ let persons = [
   },
 ];
 
+morgan.token("content", (req) => {
+  return JSON.stringify(req.body);
+});
+
 app.get("/", (request, response) => {
   response.send(`<h1>loading</h1>`);
 });
@@ -43,7 +54,7 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   persons = persons.filter((note) => note.id !== id);
-  response.status(204).end;
+  response.status(204).end();
 });
 app.get("/info", (request, response) => {
   response.send(
