@@ -1,7 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use(
   morgan(
@@ -79,4 +81,6 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 const PORT = 3001;
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log("server is listering to ", PORT);
+});
