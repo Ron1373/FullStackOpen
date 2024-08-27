@@ -52,11 +52,7 @@ const App = () => {
               setNotificationMessage(`${newName}'s number was changed`);
               setTimeout(() => setNotificationMessage(""), 5000);
             })
-            .catch((error) =>
-              setNotificationMessage(
-                `${newName} has already been removed from server`
-              )
-            );
+            .catch((error) => setNotificationMessage(error.message));
         }
         notANewName = true;
       }
@@ -65,15 +61,21 @@ const App = () => {
       return;
     }
 
-    contacts.create(newNameObject).then((returnedContact) => {
-      console.log(returnedContact);
-      setPersons(persons.concat(returnedContact));
+    contacts
+      .create(newNameObject)
+      .then((returnedContact) => {
+        console.log(returnedContact);
+        setPersons(persons.concat(returnedContact));
 
-      setNewName("");
-      setNewPhone("");
-      setNotificationMessage(`${newNameObject.name}'s contact was added`);
-      setTimeout(() => setNotificationMessage(""), 5000);
-    });
+        setNewName("");
+        setNewPhone("");
+        setNotificationMessage(`${newNameObject.name}'s contact was added`);
+        setTimeout(() => setNotificationMessage(""), 5000);
+      })
+      .catch((error) => {
+        console.log(error);
+        setNotificationMessage(error.message);
+      });
   };
   const filterName = (event) => {
     setFilterData(event.target.value.toLowerCase());
