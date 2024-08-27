@@ -1,2 +1,1 @@
-link to application:
-https://phonebook-iaek.onrender.com/
+Web app is live at: https://fullstackopen-m96l.onrender.com/
