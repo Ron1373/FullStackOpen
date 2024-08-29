@@ -127,3 +127,19 @@ describe("author with most blogs", () => {
     assert.deepStrictEqual(listHelper.mostBlogs([]), null);
   });
 });
+
+describe("author with most likes", () => {
+  test("when the list equals more than one blog, returns the most liked author", () => {
+    assert.deepStrictEqual(listHelper.mostLikes(blogs), {
+      author: "Edsger W. Dijkstra",
+      likes: 17,
+    });
+  });
+
+  test("when the list equals one blog, returns that author", () => {
+    assert.deepStrictEqual(listHelper.mostLikes(listWithOneBlog), {
+      author: "Edsger W. Dijkstra",
+      likes: 5,
+    });
+  });
+});
