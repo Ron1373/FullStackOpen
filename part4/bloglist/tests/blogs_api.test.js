@@ -86,6 +86,17 @@ test("if url is missing, response is 404", async () => {
   await api.post("/api/blogs").send(postMissingTitle).expect(400);
 });
 
+test("delete post works", async () => {
+  const blogs = await Blog.find({});
+  const blogToDelete = blogs[0];
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const newBlogs = await Blog.find({});
+  const newBlogsTitles = newBlogs.map((blog) => blog.title);
+  assert.strictEqual(newBlogs.length, blogs.length - 1);
+  assert(!newBlogsTitles.includes(blogToDelete.title));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
