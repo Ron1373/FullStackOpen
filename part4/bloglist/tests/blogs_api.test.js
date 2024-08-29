@@ -97,6 +97,22 @@ test("delete post works", async () => {
   assert(!newBlogsTitles.includes(blogToDelete.title));
 });
 
+test("updating number of likes on post works", async () => {
+  const blogs = await Blog.find({});
+  const blogToUpdate = blogs[0];
+  const initialLikes = blogToUpdate.likes;
+  const updatedLikes = initialLikes + 100;
+
+  const updatedBlogData = { likes: updatedLikes };
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlogData)
+    .expect(200);
+
+  assert.strictEqual(initialLikes + 100, response.body.likes);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
