@@ -68,6 +68,24 @@ test("when likes is missing from request, default to 0", async () => {
   assert.strictEqual(newPost[0].likes, 0);
 });
 
+test("if title is missing, response is 404", async () => {
+  const postMissingTitle = {
+    author: "Hank",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/node-is-great.html",
+    likes: 100,
+  };
+  await api.post("/api/blogs").send(postMissingTitle).expect(400);
+});
+
+test("if url is missing, response is 404", async () => {
+  const postMissingTitle = {
+    title: "React is better than Vue",
+    author: "Hank",
+    likes: 100,
+  };
+  await api.post("/api/blogs").send(postMissingTitle).expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
