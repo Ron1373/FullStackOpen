@@ -52,6 +52,22 @@ test("creating a new blog post works", async () => {
   assert(blogTitles.includes("Full stack open is great!"));
 });
 
+test("when likes is missing from request, default to 0", async () => {
+  const postMissingLikes = {
+    title: "Node is great",
+    author: "Hank",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/node-is-great.html",
+  };
+  await api.post("/api/blogs").send(postMissingLikes);
+  const response = await api.get("/api/blogs");
+  const newPost = response.body.filter(
+    (blog) =>
+      blog.title === postMissingLikes.title &&
+      blog.author === postMissingLikes.author
+  );
+  assert.strictEqual(newPost[0].likes, 0);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
