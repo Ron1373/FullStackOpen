@@ -15,16 +15,23 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test.only("blogs are returned as json", async () => {
+test("blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
 
-test.only("there are five blogs", async () => {
+test("there are five blogs", async () => {
   const response = await api.get("/api/blogs");
   assert.strictEqual(response.body.length, 6);
+});
+
+test("the unique identifier property of the blog posts is named id", async () => {
+  const response = await api.get("/api/blogs");
+  const blogs = response.body;
+  assert(blogs[0].id !== undefined);
+  assert.strictEqual(blogs[0]._id, undefined);
 });
 
 after(async () => {
