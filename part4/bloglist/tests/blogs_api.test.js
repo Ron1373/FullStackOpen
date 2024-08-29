@@ -34,6 +34,24 @@ test("the unique identifier property of the blog posts is named id", async () =>
   assert.strictEqual(blogs[0]._id, undefined);
 });
 
+test("creating a new blog post works", async () => {
+  const newPost = {
+    title: "Full stack open is great!",
+    author: "Max King",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/full-stack-open.html",
+    likes: 10,
+  };
+  await api
+    .post("/api/blogs")
+    .send(newPost)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+  const response = await api.get("/api/blogs");
+  const blogTitles = response.body.map((blog) => blog.title);
+  assert.strictEqual(response.body.length, helper.initialBlogs.length + 1);
+  assert(blogTitles.includes("Full stack open is great!"));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
