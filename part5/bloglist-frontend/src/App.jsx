@@ -93,6 +93,14 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged in</p>
+          <button
+            onClick={() => {
+              setUser(null);
+              window.localStorage.removeItem("loginDetails");
+            }}
+          >
+            Log out
+          </button>
           {blogList()}
         </div>
       )}
