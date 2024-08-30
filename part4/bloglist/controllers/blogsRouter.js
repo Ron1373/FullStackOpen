@@ -2,10 +2,9 @@ const blogsRouter = require("express").Router();
 const Blog = require("../models/blogs");
 const User = require("../models/users");
 
-blogsRouter.get("/", (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
-  });
+blogsRouter.get("/", async (request, response) => {
+  const blogs = await Blog.find({}).populate("user", { name: 1, username: 1 });
+  response.json(blogs);
 });
 
 blogsRouter.post("/", async (request, response, next) => {
