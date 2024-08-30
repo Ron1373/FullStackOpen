@@ -10,6 +10,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -20,6 +21,7 @@ const App = () => {
       setUsername("");
       setPassword("");
       window.localStorage.setItem("loginDetails", JSON.stringify(user));
+      blogService.setToken(user.token);
     } catch (error) {
       setErrorMessage("Wrong credentials");
       setTimeout(() => {
@@ -86,6 +88,60 @@ const App = () => {
     </>
   );
 
+  const blogForm = () => (
+    <>
+      <h2>Create New Blog</h2>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          blogService.setToken(user.token);
+          blogService.create(newBlog);
+          setNewBlog({ title: "", author: "", url: "" });
+        }}
+      >
+        <div>
+          <label htmlFor="title">title:</label>
+          <input
+            type="text"
+            value={newBlog.title}
+            onChange={(event) => {
+              setNewBlog((prev) => ({ ...prev, title: event.target.value }));
+            }}
+            id="title"
+            name="title"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="author">author:</label>
+          <input
+            type="text"
+            value={newBlog.author}
+            onChange={(event) => {
+              setNewBlog((prev) => ({ ...prev, author: event.target.value }));
+            }}
+            id="author"
+            name="author"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="url">url:</label>
+          <input
+            type="text"
+            value={newBlog.url}
+            onChange={(event) => {
+              setNewBlog((prev) => ({ ...prev, url: event.target.value }));
+            }}
+            name="url"
+            id="url"
+          />
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </>
+  );
+
   return (
     <div>
       {user === null ? (
@@ -93,6 +149,7 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged in</p>
+
           <button
             onClick={() => {
               setUser(null);
@@ -101,6 +158,7 @@ const App = () => {
           >
             Log out
           </button>
+          {blogForm()}
           {blogList()}
         </div>
       )}
