@@ -5,7 +5,6 @@ const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blogs");
 const helper = require("../utils/helper");
-
 const api = supertest(app);
 
 beforeEach(async () => {
@@ -35,14 +34,25 @@ test("the unique identifier property of the blog posts is named id", async () =>
 });
 
 test("creating a new blog post works", async () => {
+  const newUser = {
+    name: "Test User",
+    username: "testuser",
+    password: "test123",
+  };
+
+  await api.post("/api/users").send(newUser).expect(201);
+  const loginResponse = await api.post("/api/login").send(newUser).expect(200);
+
   const newPost = {
     title: "Full stack open is great!",
     author: "Max King",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/full-stack-open.html",
     likes: 10,
   };
+
   await api
     .post("/api/blogs")
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
     .send(newPost)
     .expect(201)
     .expect("Content-Type", /application\/json/);
@@ -53,12 +63,24 @@ test("creating a new blog post works", async () => {
 });
 
 test("when likes is missing from request, default to 0", async () => {
+  const newUser = {
+    name: "Test User",
+    username: "testuser",
+    password: "test123",
+  };
+
+  await api.post("/api/users").send(newUser).expect(201);
+  const loginResponse = await api.post("/api/login").send(newUser).expect(200);
+
   const postMissingLikes = {
     title: "Node is great",
     author: "Hank",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/node-is-great.html",
   };
-  await api.post("/api/blogs").send(postMissingLikes);
+  await api
+    .post("/api/blogs")
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
+    .send(postMissingLikes);
   const response = await api.get("/api/blogs");
   const newPost = response.body.filter(
     (blog) =>
@@ -69,27 +91,80 @@ test("when likes is missing from request, default to 0", async () => {
 });
 
 test("if title is missing, response is 404", async () => {
+  const newUser = {
+    name: "Test User",
+    username: "testuser",
+    password: "test123",
+  };
+
+  await api.post("/api/users").send(newUser).expect(201);
+  const loginResponse = await api.post("/api/login").send(newUser).expect(200);
+
   const postMissingTitle = {
     author: "Hank",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/node-is-great.html",
     likes: 100,
   };
-  await api.post("/api/blogs").send(postMissingTitle).expect(400);
+  await api
+    .post("/api/blogs")
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
+    .send(postMissingTitle)
+    .expect(400);
 });
 
 test("if url is missing, response is 404", async () => {
+  const newUser = {
+    name: "Test User",
+    username: "testuser",
+    password: "test123",
+  };
+
+  await api.post("/api/users").send(newUser).expect(201);
+  const loginResponse = await api.post("/api/login").send(newUser).expect(200);
+
   const postMissingTitle = {
     title: "React is better than Vue",
     author: "Hank",
     likes: 100,
   };
-  await api.post("/api/blogs").send(postMissingTitle).expect(400);
+  await api
+    .post("/api/blogs")
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
+    .send(postMissingTitle)
+    .expect(400);
 });
 
 test("delete post works", async () => {
+  const newUser = {
+    name: "Test User",
+    username: "testuser",
+    password: "test123",
+  };
+
+  await api.post("/api/users").send(newUser).expect(201);
+  const loginResponse = await api.post("/api/login").send(newUser).expect(200);
+
+  const newPost = {
+    title: "Full stack open is great!",
+    author: "Max King",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/full-stack-open.html",
+    likes: 10,
+  };
+
+  await api
+    .post("/api/blogs")
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
+    .send(newPost)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
   const blogs = await Blog.find({});
-  const blogToDelete = blogs[0];
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const blogToDelete = blogs.filter((blog) => blog.title === newPost.title)[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete._id.toString()}`)
+    .set({ Authorization: `Bearer ${loginResponse.body.token}` })
+    .expect(204);
 
   const newBlogs = await Blog.find({});
   const newBlogsTitles = newBlogs.map((blog) => blog.title);
