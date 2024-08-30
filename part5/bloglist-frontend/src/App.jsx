@@ -19,6 +19,7 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      window.localStorage.setItem("loginDetails", JSON.stringify(user));
     } catch (error) {
       setErrorMessage("Wrong credentials");
       setTimeout(() => {
@@ -26,6 +27,14 @@ const App = () => {
       }, 5000);
     }
   };
+
+  useEffect(() => {
+    const loginDetailsJson = window.localStorage.getItem("loginDetails");
+    if (loginDetailsJson) {
+      setUser(JSON.parse(loginDetailsJson));
+    }
+  }, []);
+
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
