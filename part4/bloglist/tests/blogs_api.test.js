@@ -134,6 +134,25 @@ test("if url is missing, response is 404", async () => {
     .expect(400);
 });
 
+test("when token is not provided, adding post fails with 401", async () => {
+  const blogsAtStart = await api.get("/api/blogs");
+
+  const post = {
+    title: "Node is great",
+    author: "Hank",
+    likes: 20,
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/node-is-great.html",
+  };
+
+  // Attempt to create a blog without providing a token
+  await api.post("/api/blogs").send(post);
+
+  const blogsAtEnd = await api.get("/api/blogs");
+
+  // Ensure the number of blogs hasn't changed
+  assert.strictEqual(blogsAtEnd.body.length, blogsAtStart.body.length);
+});
+
 test("delete post works", async () => {
   const newUser = {
     name: "Test User",

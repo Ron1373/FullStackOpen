@@ -11,6 +11,9 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response, next) => {
   try {
     const user = request.user;
+    if (!user) {
+      return response.status(401).json({ error: "token missing or invalid" });
+    }
     const blog = new Blog({
       title: request.body.title,
       author: request.body.author,
