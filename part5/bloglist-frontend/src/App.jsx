@@ -9,6 +9,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
@@ -45,7 +46,6 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={errorMessage} />
         <form onSubmit={handleLogin}>
           <div>
             <label htmlFor="username"></label>
@@ -94,9 +94,22 @@ const App = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          blogService.setToken(user.token);
-          blogService.create(newBlog);
-          setNewBlog({ title: "", author: "", url: "" });
+          try {
+            blogService.setToken(user.token);
+            blogService.create(newBlog);
+            setNotificationMessage(
+              `A new blog ${newBlog.title} by ${newBlog.author} was added.`
+            );
+            setTimeout(() => {
+              setNotificationMessage("");
+            }, 5000);
+            setNewBlog({ title: "", author: "", url: "" });
+          } catch {
+            setErrorMessage("Unable to create new blog");
+            setTimeout(() => {
+              setErrorMessage("");
+            }, 5000);
+          }
         }}
       >
         <div>
@@ -144,6 +157,10 @@ const App = () => {
 
   return (
     <div>
+      <Notification
+        errorMessage={errorMessage}
+        notificationMessage={notificationMessage}
+      />
       {user === null ? (
         loginForm()
       ) : (
