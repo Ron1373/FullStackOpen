@@ -22,7 +22,7 @@ test("blogs are returned as json", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
-test("there are five blogs", async () => {
+test("there are six blogs", async () => {
   const response = await api.get("/api/blogs");
   assert.strictEqual(response.body.length, 6);
 });
