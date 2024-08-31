@@ -1,6 +1,6 @@
 import Blog from "./Blog";
 
-const BlogList = ({ blogs }) => (
+const BlogList = ({ blogs, setBlogs }) => (
   <>
     <h2>blogs</h2>
     {blogs.map((blog) => (

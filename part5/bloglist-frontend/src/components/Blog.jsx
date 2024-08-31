@@ -1,4 +1,6 @@
 import Togglable from "./Togglable";
+import blogService from "../services/blogs";
+import { useState } from "react";
 
 const Blog = ({ blog }) => {
   const blogStyle = {
@@ -8,16 +10,24 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+  const [newBlog, setNewBlog] = useState(blog);
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      {newBlog.title} {newBlog.author}
       <Togglable showButtonLabel="view" hideButtonLabel="hide">
         {blog.url}
         <br />
-        Likes: {blog.likes}
-        <button>like</button>
+        Likes: {newBlog.likes}
+        <button
+          onClick={() => {
+            blogService.addLike(newBlog);
+            setNewBlog((prev) => ({ ...prev, likes: prev.likes + 1 }));
+          }}
+        >
+          like
+        </button>
         <br />
-        {blog.user.name}
+        {newBlog.user.name}
       </Togglable>
     </div>
   );
