@@ -17,7 +17,9 @@ const BlogForm = ({
       setNotificationMessage(
         `A new blog ${newBlog.title} by ${newBlog.author} was added.`
       );
-      setBlogs((prev) => [...prev, returnedBlog]);
+      blogService.getAll().then((blogs) => {
+        setBlogs(blogs);
+      });
       setTimeout(() => {
         setNotificationMessage("");
       }, 5000);

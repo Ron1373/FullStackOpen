@@ -1,8 +1,7 @@
 import Togglable from "./Togglable";
 import blogService from "../services/blogs";
-import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setBlogs, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,24 +10,45 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
   };
 
-  const [likes, setLikes] = useState(blog.likes);
+  const removeBlog = () => (
+    <button
+      onClick={async () => {
+        try {
+          if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+            await blogService.deletePost(blog);
+            blogService.getAll().then((blogs) => {
+              setBlogs(blogs);
+            });
+          }
+        } catch (error) {
+          console.log("Error deleting blog:", error);
+        }
+      }}
+    >
+      Remove
+    </button>
+  );
+
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
       <Togglable showButtonLabel="view" hideButtonLabel="hide">
         {blog.url}
         <br />
-        Likes: {likes}
+        Likes: {blog.likes}
         <button
           onClick={async () => {
             const updatedBlog = await blogService.addLike(blog);
-            setLikes(updatedBlog.likes);
+            blogService.getAll().then((blogs) => {
+              setBlogs(blogs);
+            });
           }}
         >
           like
         </button>
         <br />
         {blog.user.name}
+        {blog.user.name === user.name && removeBlog()}
       </Togglable>
     </div>
   );

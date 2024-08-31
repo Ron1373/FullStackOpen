@@ -15,15 +15,18 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const loginDetailsJson = window.localStorage.getItem("loginDetails");
-    if (loginDetailsJson) {
-      setUser(JSON.parse(loginDetailsJson));
+    const loginDetails = window.localStorage.getItem("loginDetails");
+    if (loginDetails) {
+      setUser(JSON.parse(loginDetails));
+      blogService.setToken(JSON.parse(loginDetails).token);
     }
   }, []);
 
   useEffect(() => {
     if (user) {
-      blogService.getAll().then((blogs) => setBlogs(blogs));
+      blogService.getAll().then((blogs) => {
+        setBlogs(blogs);
+      });
     }
   }, [user]);
 
@@ -55,7 +58,7 @@ const App = () => {
               setBlogs={setBlogs}
             />
           </Togglable>
-          <BlogList blogs={blogs} />
+          <BlogList blogs={blogs} setBlogs={setBlogs} user={user} />
         </div>
       )}
     </div>

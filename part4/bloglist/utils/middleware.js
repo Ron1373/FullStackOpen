@@ -32,7 +32,8 @@ const errorHandler = (error, req, res, next) => {
 };
 
 const userExtractor = async (request, response, next) => {
-  const authorization = request.get("authorization");
+  const authorization = request.get("Authorization");
+
   if (authorization && authorization.startsWith("Bearer")) {
     const token = authorization.replace("Bearer ", "");
     const decodedToken = jwt.verify(token, process.env.SECRET);
