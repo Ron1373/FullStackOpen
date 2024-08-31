@@ -2,7 +2,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 
-const loginForm = ({ setUser, setErrorMessage }) => {
+const LoginForm = ({ setUser, setErrorMessage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -60,4 +60,4 @@ const loginForm = ({ setUser, setErrorMessage }) => {
   );
 };
 
-export default loginForm;
+export default LoginForm;

@@ -13,7 +13,7 @@ const BlogForm = ({
     event.preventDefault();
     try {
       blogService.setToken(user.token);
-      const returnedBlog = await blogService.create(newBlog);
+      await blogService.create(newBlog);
       setNotificationMessage(
         `A new blog ${newBlog.title} by ${newBlog.author} was added.`
       );

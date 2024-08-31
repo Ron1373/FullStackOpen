@@ -38,7 +38,7 @@ const Blog = ({ blog, setBlogs, user }) => {
         Likes: {blog.likes}
         <button
           onClick={async () => {
-            const updatedBlog = await blogService.addLike(blog);
+            await blogService.addLike(blog);
             blogService.getAll().then((blogs) => {
               setBlogs(blogs);
             });
