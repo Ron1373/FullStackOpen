@@ -7,54 +7,12 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [notificationMessage, setNotificationMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const user = await loginService.login({ username, password });
-      setUser(user);
-      setUsername("");
-      setPassword("");
-      window.localStorage.setItem("loginDetails", JSON.stringify(user));
-      blogService.setToken(user.token);
-    } catch (error) {
-      setErrorMessage("Wrong credentials");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
-  };
-
-  const handleAddBlog = (event) => {
-    event.preventDefault();
-    try {
-      blogService.setToken(user.token);
-      blogService.create(newBlog);
-      setNotificationMessage(
-        `A new blog ${newBlog.title} by ${newBlog.author} was added.`
-      );
-      setTimeout(() => {
-        setNotificationMessage("");
-      }, 5000);
-      setNewBlog({ title: "", author: "", url: "" });
-    } catch {
-      setErrorMessage("Unable to create new blog");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
-    }
-  };
 
   useEffect(() => {
     const loginDetailsJson = window.localStorage.getItem("loginDetails");
@@ -74,13 +32,7 @@ const App = () => {
         notificationMessage={notificationMessage}
       />
       {user === null ? (
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
+        <LoginForm setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
         <div>
           <p>{user.name} logged in</p>
@@ -95,9 +47,9 @@ const App = () => {
           </button>
           <Togglable>
             <BlogForm
-              newBlog={newBlog}
-              setNewBlog={setNewBlog}
-              handleAddBlog={handleAddBlog}
+              setErrorMessage={setErrorMessage}
+              setNotificationMessage={setNotificationMessage}
+              user={user}
             />
           </Togglable>
           <BlogList blogs={blogs} />
