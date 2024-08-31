@@ -1,17 +1,23 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setNotificationMessage, setErrorMessage, user }) => {
+const BlogForm = ({
+  setNotificationMessage,
+  setErrorMessage,
+  user,
+  setBlogs,
+}) => {
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
 
-  const handleAddBlog = (event) => {
+  const handleAddBlog = async (event) => {
     event.preventDefault();
     try {
       blogService.setToken(user.token);
-      blogService.create(newBlog);
+      const returnedBlog = await blogService.create(newBlog);
       setNotificationMessage(
         `A new blog ${newBlog.title} by ${newBlog.author} was added.`
       );
+      setBlogs((prev) => [...prev, returnedBlog]);
       setTimeout(() => {
         setNotificationMessage("");
       }, 5000);

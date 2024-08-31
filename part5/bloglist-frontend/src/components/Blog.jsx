@@ -10,24 +10,25 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-  const [newBlog, setNewBlog] = useState(blog);
+
+  const [likes, setLikes] = useState(blog.likes);
   return (
     <div style={blogStyle}>
-      {newBlog.title} {newBlog.author}
+      {blog.title} {blog.author}
       <Togglable showButtonLabel="view" hideButtonLabel="hide">
         {blog.url}
         <br />
-        Likes: {newBlog.likes}
+        Likes: {likes}
         <button
-          onClick={() => {
-            blogService.addLike(newBlog);
-            setNewBlog((prev) => ({ ...prev, likes: prev.likes + 1 }));
+          onClick={async () => {
+            const updatedBlog = await blogService.addLike(blog);
+            setLikes(updatedBlog.likes);
           }}
         >
           like
         </button>
         <br />
-        {newBlog.user.name}
+        {blog.user.name}
       </Togglable>
     </div>
   );

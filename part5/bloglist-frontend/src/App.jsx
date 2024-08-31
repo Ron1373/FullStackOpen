@@ -22,8 +22,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    if (user) {
+      blogService.getAll().then((blogs) => setBlogs(blogs));
+    }
+  }, [user]);
 
   return (
     <div>
@@ -50,6 +52,7 @@ const App = () => {
               setErrorMessage={setErrorMessage}
               setNotificationMessage={setNotificationMessage}
               user={user}
+              setBlogs={setBlogs}
             />
           </Togglable>
           <BlogList blogs={blogs} />
