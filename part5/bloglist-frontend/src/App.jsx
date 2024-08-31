@@ -45,7 +45,7 @@ const App = () => {
           >
             Log out
           </button>
-          <Togglable>
+          <Togglable showButtonLabel="Create New Blog" hideButtonLabel="cancel">
             <BlogForm
               setErrorMessage={setErrorMessage}
               setNotificationMessage={setNotificationMessage}
