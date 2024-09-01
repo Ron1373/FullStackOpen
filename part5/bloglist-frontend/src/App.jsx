@@ -14,6 +14,27 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const handleAddBlog = async (newBlog) => {
+    try {
+      blogService.setToken(user.token);
+      await blogService.create(newBlog);
+      setNotificationMessage(
+        `A new blog ${newBlog.title} by ${newBlog.author} was added.`
+      );
+      blogService.getAll().then((blogs) => {
+        setBlogs(blogs);
+      });
+      setTimeout(() => {
+        setNotificationMessage("");
+      }, 5000);
+    } catch {
+      setErrorMessage("Unable to create new blog");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+    }
+  };
+
   useEffect(() => {
     const loginDetails = window.localStorage.getItem("loginDetails");
     if (loginDetails) {
@@ -51,12 +72,7 @@ const App = () => {
             Log out
           </button>
           <Togglable showButtonLabel="Create New Blog" hideButtonLabel="cancel">
-            <BlogForm
-              setErrorMessage={setErrorMessage}
-              setNotificationMessage={setNotificationMessage}
-              user={user}
-              setBlogs={setBlogs}
-            />
+            <BlogForm handleAddBlog={handleAddBlog} />
           </Togglable>
           <BlogList blogs={blogs} setBlogs={setBlogs} user={user} />
         </div>
