@@ -1,13 +1,17 @@
-import Togglable from "./Togglable";
 import blogService from "../services/blogs";
-
-const Blog = ({ blog, setBlogs, user }) => {
+import { useState } from "react";
+const Blog = ({ blog, user, setBlogs }) => {
+  const [visible, setVisible] = useState(false);
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: "solid",
     borderWidth: 1,
     marginBottom: 5,
+  };
+
+  const toggleVisibility = () => {
+    setVisible(!visible);
   };
 
   const removeBlog = () => (
@@ -30,10 +34,19 @@ const Blog = ({ blog, setBlogs, user }) => {
   );
 
   return (
-    <div style={blogStyle} className="blog">
+    <div className="blog" style={blogStyle}>
       {blog.title} {blog.author}
-      <Togglable showButtonLabel="view" hideButtonLabel="hide">
-        <div className="blog-details">
+      <div>
+        <button
+          style={{ display: visible ? "none" : "block" }}
+          onClick={toggleVisibility}
+        >
+          view
+        </button>
+        <div
+          style={{ display: visible ? "" : "none" }}
+          className="blog-details"
+        >
           {blog.url}
           <br />
           Likes: {blog.likes}
@@ -50,10 +63,16 @@ const Blog = ({ blog, setBlogs, user }) => {
           <br />
           {blog.user.name}
           {blog.user.name === user.name && removeBlog()}
+          <button
+            style={{ display: visible ? "block" : "none" }}
+            onClick={toggleVisibility}
+          >
+            hide
+          </button>
         </div>
-      </Togglable>
+        <br />
+      </div>
     </div>
   );
 };
-
 export default Blog;
