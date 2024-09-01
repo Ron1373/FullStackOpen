@@ -25,6 +25,7 @@ const BlogForm = ({ handleAddBlog }) => {
             id="title"
             name="title"
             placeholder="title"
+            data-testid="title"
           />
         </div>
 
@@ -39,6 +40,7 @@ const BlogForm = ({ handleAddBlog }) => {
             id="author"
             name="author"
             placeholder="author"
+            data-testid="author"
           />
         </div>
 
@@ -53,6 +55,7 @@ const BlogForm = ({ handleAddBlog }) => {
             }}
             name="url"
             id="url"
+            data-testid="url"
           />
         </div>
         <button type="submit">Create</button>
