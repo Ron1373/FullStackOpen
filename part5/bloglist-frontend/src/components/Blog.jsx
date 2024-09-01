@@ -1,17 +1,12 @@
 import blogService from "../services/blogs";
-import { useState } from "react";
-const Blog = ({ blog, user, setBlogs }) => {
-  const [visible, setVisible] = useState(false);
+
+const Blog = ({ blog, user, setBlogs, toggleVisibility, visible }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: "solid",
     borderWidth: 1,
     marginBottom: 5,
-  };
-
-  const toggleVisibility = () => {
-    setVisible(!visible);
   };
 
   const removeBlog = () => (
