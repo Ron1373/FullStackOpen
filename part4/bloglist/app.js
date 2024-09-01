@@ -10,6 +10,11 @@ const usersRouter = require("./controllers/usersRouter");
 const loginRouter = require("./controllers/login");
 const middleware = require("./utils/middleware");
 
+if (process.env.NODE_ENV === "test") {
+  const testingRouter = require("./controllers/testing");
+  app.use("/api/testing", testingRouter);
+}
+
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);

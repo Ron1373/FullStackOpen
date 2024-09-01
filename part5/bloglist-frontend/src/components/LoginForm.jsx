@@ -38,6 +38,7 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
             }}
             id="username"
             name="username"
+            data-testid="username"
           />
         </div>
 
@@ -50,6 +51,7 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
               setPassword(event.target.value);
             }}
             id="password"
+            data-testid="password"
             name="password"
           />
 
