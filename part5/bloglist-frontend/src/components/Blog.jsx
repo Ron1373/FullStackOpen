@@ -30,25 +30,27 @@ const Blog = ({ blog, setBlogs, user }) => {
   );
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blog.title} {blog.author}
       <Togglable showButtonLabel="view" hideButtonLabel="hide">
-        {blog.url}
-        <br />
-        Likes: {blog.likes}
-        <button
-          onClick={async () => {
-            await blogService.addLike(blog);
-            blogService.getAll().then((blogs) => {
-              setBlogs(blogs);
-            });
-          }}
-        >
-          like
-        </button>
-        <br />
-        {blog.user.name}
-        {blog.user.name === user.name && removeBlog()}
+        <div className="blog-details">
+          {blog.url}
+          <br />
+          Likes: {blog.likes}
+          <button
+            onClick={async () => {
+              await blogService.addLike(blog);
+              blogService.getAll().then((blogs) => {
+                setBlogs(blogs);
+              });
+            }}
+          >
+            like
+          </button>
+          <br />
+          {blog.user.name}
+          {blog.user.name === user.name && removeBlog()}
+        </div>
       </Togglable>
     </div>
   );
