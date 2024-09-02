@@ -11,13 +11,16 @@ const AnecdoteForm = () => {
     dispatch(createAnecdote(content));
   };
   return (
-    <form onSubmit={addAnecdote}>
-      <div>
-        <label htmlFor="anecdote"></label>
-        <input type="text" id="anecdote" name="anecdote" />
-      </div>
-      <button type="submit">create</button>
-    </form>
+    <>
+      <h2>Create new anecdotes</h2>
+      <form onSubmit={addAnecdote}>
+        <div>
+          <label htmlFor="anecdote"></label>
+          <input type="text" id="anecdote" name="anecdote" />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </>
   );
 };
 
