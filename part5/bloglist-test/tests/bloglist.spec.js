@@ -11,6 +11,13 @@ describe("Blog app", () => {
         password: "test123",
       },
     });
+    await request.post("http://localhost:3000/api/users", {
+      data: {
+        name: "Second Test User",
+        username: "testuser2",
+        password: "test123",
+      },
+    });
     await page.goto("http://localhost:5173");
   });
 
@@ -67,6 +74,17 @@ describe("Blog app", () => {
 
       await page.waitForTimeout(5500);
       await expect(page.getByText("test title")).not.toBeVisible();
+    });
+
+    test.("only user who added a blog can see delete button", async ({
+      page,
+    }) => {
+      await helper.createBlog(page, "test title", "test author", "testurl.com");
+
+      await page.getByRole("button", { name: "Log out" }).click();
+      await helper.loginWith(page, "testuser2", "test123");
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByText("remove")).not.toBeVisible();
     });
   });
 });
