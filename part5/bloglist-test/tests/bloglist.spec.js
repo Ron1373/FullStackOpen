@@ -39,14 +39,17 @@ describe("Blog app", () => {
     });
 
     test("a new blog can be created", async ({ page }) => {
-      await page.getByRole("button", { name: "Create new blog" }).click();
-      await page.getByTestId("title").fill("test title");
-      await page.getByTestId("author").fill("test author");
-      await page.getByTestId("url").fill("testurl.com");
-
-      await page.getByRole("button", { name: "Create" }).click();
-
       await expect(page.getByText("test title")).toBeVisible();
+    });
+
+    test.only("blog can be liked", async ({ page }) => {
+      await helper.createBlog(page, "test title", "test author", "testurl.com");
+
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByText("Likes: 0")).toBeVisible();
+      await page.getByRole("button", { name: "like" }).click();
+
+      await expect(page.getByText("Likes: 1")).toBeVisible();
     });
   });
 });
