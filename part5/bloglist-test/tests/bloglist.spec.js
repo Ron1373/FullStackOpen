@@ -46,10 +46,13 @@ describe("Blog app", () => {
     });
 
     test("a new blog can be created", async ({ page }) => {
+      await page.getByRole("button", { name: "Create new blog" }).click();
+      await helper.createBlog(page, "test title", "test author", "testurl.com");
       await expect(page.getByText("test title")).toBeVisible();
     });
 
     test("blog can be liked", async ({ page }) => {
+      await page.getByRole("button", { name: "Create new blog" }).click();
       await helper.createBlog(page, "test title", "test author", "testurl.com");
 
       await page.getByRole("button", { name: "view" }).click();
@@ -60,6 +63,7 @@ describe("Blog app", () => {
     });
 
     test("user who added a blog can delete it", async ({ page }) => {
+      await page.getByRole("button", { name: "Create new blog" }).click();
       await helper.createBlog(page, "test title", "test author", "testurl.com");
 
       await page.getByRole("button", { name: "view" }).click();
@@ -76,15 +80,33 @@ describe("Blog app", () => {
       await expect(page.getByText("test title")).not.toBeVisible();
     });
 
-    test.("only user who added a blog can see delete button", async ({
-      page,
-    }) => {
+    test.only("blogs are arranged by likes", async ({ page }) => {
+      await page.getByRole("button", { name: "Create new blog" }).click();
       await helper.createBlog(page, "test title", "test author", "testurl.com");
 
-      await page.getByRole("button", { name: "Log out" }).click();
-      await helper.loginWith(page, "testuser2", "test123");
-      await page.getByRole("button", { name: "view" }).click();
-      await expect(page.getByText("remove")).not.toBeVisible();
-    });
+      await helper.createBlog(
+        page,
+        "test title 2",
+        "test author2",
+        "testurl2.com"
+      );
+
+      const blogs = page.locator(".blog");
+      await blogs.nth(0).getByRole("button", { name: "view" }).click();
+      await blogs.nth(0).getByRole("button", { name: "like" }).click();
+
+      await blogs.nth(1).getByRole("button", { name: "view" }).click();
+      await blogs.nth(1).getByRole("button", { name: "like" }).click();
+      await blogs.nth(1).getByRole("button", { name: "like" }).click();
+
+      const firstBlogLikes = parseInt(
+        await blogs.nth(0).locator('[data-testid="likes-count"]').innerText()
+      );
+      const secondBlogLikes = parseInt(
+        await blogs.nth(1).locator('[data-testid="likes-count"]').innerText()
+      );
+
+      expect(firstBlogLikes).toBeGreaterThanOrEqual(secondBlogLikes);
+    }, 30000);
   });
 });

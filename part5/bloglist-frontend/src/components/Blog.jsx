@@ -1,6 +1,12 @@
 import blogService from "../services/blogs";
+import { useState } from "react";
+const Blog = ({ blog, user, setBlogs }) => {
+  const [visible, setVisible] = useState(false);
 
-const Blog = ({ blog, user, setBlogs, toggleVisibility, visible }) => {
+  const toggleVisibility = () => {
+    setVisible(!visible);
+  };
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -44,7 +50,7 @@ const Blog = ({ blog, user, setBlogs, toggleVisibility, visible }) => {
         >
           {blog.url}
           <br />
-          Likes: {blog.likes}
+          Likes: <span data-testid="likes-count">{blog.likes}</span>
           <button
             onClick={async () => {
               await blogService.addLike(blog);
