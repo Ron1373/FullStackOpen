@@ -42,7 +42,7 @@ describe("Blog app", () => {
       await expect(page.getByText("test title")).toBeVisible();
     });
 
-    test.only("blog can be liked", async ({ page }) => {
+    test("blog can be liked", async ({ page }) => {
       await helper.createBlog(page, "test title", "test author", "testurl.com");
 
       await page.getByRole("button", { name: "view" }).click();
@@ -50,6 +50,23 @@ describe("Blog app", () => {
       await page.getByRole("button", { name: "like" }).click();
 
       await expect(page.getByText("Likes: 1")).toBeVisible();
+    });
+
+    test("user who added a blog can delete it", async ({ page }) => {
+      await helper.createBlog(page, "test title", "test author", "testurl.com");
+
+      await page.getByRole("button", { name: "view" }).click();
+      page.on("dialog", async (dialog) => {
+        if (dialog.message().includes("Remove")) {
+          await dialog.accept();
+        } else {
+          await dialog.dismiss();
+        }
+      });
+      await page.getByRole("button", { name: "remove" }).click();
+
+      await page.waitForTimeout(5500);
+      await expect(page.getByText("test title")).not.toBeVisible();
     });
   });
 });
