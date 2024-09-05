@@ -13,6 +13,8 @@ const notificationReducer = (state, action) => {
       return `anecdote '${action.payload}' created`;
     case "RESET":
       return "";
+    case "ERROR":
+      return action.payload;
     default:
       return state;
   }
