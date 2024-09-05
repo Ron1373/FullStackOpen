@@ -3,22 +3,22 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 5
+      "votes": 22
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
       "id": "21149",
-      "votes": 0
+      "votes": 3
     },
     {
       "content": "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
       "id": "69581",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
       "id": "36975",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Premature optimization is the root of all evil.",
@@ -28,11 +28,57 @@
     {
       "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
       "id": "98312",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "The only thing we have to fear is fear itself.",
-      "id": "H3vP0BH"
+      "id": "H3vP0BH",
+      "votes": null
+    },
+    {
+      "content": "Never fight your own battles if someone else is willing to fight them for you",
+      "id": "_KMDOXL",
+      "votes": 1
+    },
+    {
+      "content": "I have seen hell, and it is a great city under siege.",
+      "id": "WiqUS-K",
+      "votes": 2
+    },
+    {
+      "content": "Great men often march in the same direction.",
+      "id": "76CJTmR",
+      "votes": 1
+    },
+    {
+      "content": "Desperation bakes heroes from the most rotten flour",
+      "votes": 1,
+      "id": "07CmIRS"
+    },
+    {
+      "content": "It is not titles that honor men, but men that honor titles.",
+      "votes": 0,
+      "id": "kXmhqLV"
+    },
+    {
+      "content": "Whoever believes that great advancement and new benefits make men forget old injuries is mistaken.",
+      "votes": 0,
+      "id": "dBB_Ow-"
+    },
+    {
+      "content": "The first method for estimating the intelligence of a ruler is to look at the men he has around him.",
+      "votes": 0,
+      "id": "AwoHYxG"
+    },
+    {
+      "content": "Men should be either treated generously or destroyed, because they take revenge for slight injuries - for heavy ones they cannot.",
+      "votes": 0,
+      "id": "GORcnGc"
+    },
+    {
+      "content": "Everyone sees what you appear to be, few experience what you really are.",
+      "votes": 0,
+      "id": "TGbGRyU"
     }
   ]
 }
