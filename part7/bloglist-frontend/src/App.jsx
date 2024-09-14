@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
@@ -11,20 +12,28 @@ import blogService from "./services/blogs";
 import NotificationContext from "./components/NotificationContext";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const queryClient = useQueryClient();
+  const { data: blogs, isLoading } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: blogService.getAll,
+  });
   const [user, setUser] = useState(null);
   const [notification, notificationDispatch] = useContext(NotificationContext);
 
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData(["blogs"]);
+      queryClient.setQueryData(["blogs"], blogs.concat(newBlog));
+    },
+  });
   const handleAddBlog = async (newBlog) => {
     try {
       blogService.setToken(user.token);
-      await blogService.create(newBlog);
+      newBlogMutation.mutate(newBlog);
       notificationDispatch({
         type: "ADD_BLOG",
         payload: { title: newBlog.title, author: newBlog.author },
-      });
-      blogService.getAll().then((blogs) => {
-        setBlogs(blogs);
       });
       setTimeout(() => {
         notificationDispatch({ type: "CLEAR" });
@@ -48,14 +57,6 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      blogService.getAll().then((blogs) => {
-        setBlogs(blogs);
-      });
-    }
-  }, [user]);
-
   return (
     <div>
       <Notification notificationMessage={notification} />
@@ -76,7 +77,11 @@ const App = () => {
           <Togglable showButtonLabel="Create New Blog" hideButtonLabel="cancel">
             <BlogForm handleAddBlog={handleAddBlog} />
           </Togglable>
-          <BlogList blogs={blogs} setBlogs={setBlogs} user={user} />
+          {isLoading ? (
+            <p>Loading blogs...</p>
+          ) : (
+            <BlogList blogs={blogs} user={user} />
+          )}
         </div>
       )}
     </div>
