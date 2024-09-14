@@ -1,9 +1,25 @@
 import blogService from "../services/blogs";
 import { useContext, useState } from "react";
 import NotificationContext from "./NotificationContext";
-const Blog = ({ blog, user, setBlogs }) => {
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+const Blog = ({ blog, user }) => {
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const [visible, setVisible] = useState(false);
+  const queryClient = useQueryClient();
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["blogs"]);
+    },
+  });
+
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.addLike,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["blogs"]);
+    },
+  });
 
   const toggleVisibility = () => {
     setVisible(!visible);
@@ -22,10 +38,7 @@ const Blog = ({ blog, user, setBlogs }) => {
       onClick={async () => {
         try {
           if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
-            await blogService.deletePost(blog);
-            blogService.getAll().then((blogs) => {
-              setBlogs(blogs);
-            });
+            deleteBlogMutation.mutate(blog);
           }
         } catch (error) {
           notificationDispatch({
@@ -58,10 +71,7 @@ const Blog = ({ blog, user, setBlogs }) => {
           Likes: <span data-testid="likes-count">{blog.likes}</span>
           <button
             onClick={async () => {
-              await blogService.addLike(blog);
-              blogService.getAll().then((blogs) => {
-                setBlogs(blogs);
-              });
+              likeBlogMutation.mutate(blog);
             }}
           >
             like

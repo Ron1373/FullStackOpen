@@ -22,9 +22,8 @@ const App = () => {
 
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
-    onSuccess: (newBlog) => {
-      const blogs = queryClient.getQueryData(["blogs"]);
-      queryClient.setQueryData(["blogs"], blogs.concat(newBlog));
+    onSuccess: () => {
+      queryClient.invalidateQueries(["blogs"]);
     },
   });
   const handleAddBlog = async (newBlog) => {
