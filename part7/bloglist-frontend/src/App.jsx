@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import BlogList from "./components/BlogList";
@@ -10,6 +10,7 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 
 import NotificationContext from "./components/NotificationContext";
+import UserContext from "./components/UserContext";
 
 const App = () => {
   const queryClient = useQueryClient();
@@ -17,8 +18,8 @@ const App = () => {
     queryKey: ["blogs"],
     queryFn: blogService.getAll,
   });
-  const [user, setUser] = useState(null);
   const [notification, notificationDispatch] = useContext(NotificationContext);
+  const [user, userDispatch] = useContext(UserContext);
 
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
@@ -26,6 +27,7 @@ const App = () => {
       queryClient.invalidateQueries(["blogs"]);
     },
   });
+
   const handleAddBlog = async (newBlog) => {
     try {
       blogService.setToken(user.token);
@@ -51,7 +53,7 @@ const App = () => {
   useEffect(() => {
     const loginDetails = window.localStorage.getItem("loginDetails");
     if (loginDetails) {
-      setUser(JSON.parse(loginDetails));
+      userDispatch({ type: "LOGIN", payload: JSON.parse(loginDetails) });
       blogService.setToken(JSON.parse(loginDetails).token);
     }
   }, []);
@@ -60,14 +62,14 @@ const App = () => {
     <div>
       <Notification notificationMessage={notification} />
       {user === null ? (
-        <LoginForm setUser={setUser} />
+        <LoginForm />
       ) : (
         <div>
           <p>{user.name} logged in</p>
 
           <button
             onClick={() => {
-              setUser(null);
+              userDispatch({ type: "LOGOUT" });
               window.localStorage.removeItem("loginDetails");
             }}
           >

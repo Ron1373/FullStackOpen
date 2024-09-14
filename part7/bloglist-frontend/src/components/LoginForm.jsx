@@ -2,8 +2,10 @@ import { useContext, useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 import NotificationContext from "./NotificationContext";
+import UserContext from "./UserContext";
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
+  const [user, userDispatch] = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [notification, notificationDispatch] = useContext(NotificationContext);
@@ -13,7 +15,7 @@ const LoginForm = ({ setUser }) => {
 
     try {
       const user = await loginService.login({ username, password });
-      setUser(user);
+      userDispatch({ type: "LOGIN", payload: user });
       setUsername("");
       setPassword("");
       window.localStorage.setItem("loginDetails", JSON.stringify(user));
