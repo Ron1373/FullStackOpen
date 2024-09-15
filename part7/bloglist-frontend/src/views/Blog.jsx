@@ -3,6 +3,7 @@ import { useContext } from "react";
 import NotificationContext from "../components/NotificationContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import Comments from "../components/Comments";
 
 const Blog = ({ user }) => {
   const id = useParams().id;
@@ -71,6 +72,7 @@ const Blog = ({ user }) => {
       Added by {blog.user.name}
       {blog.user.name === user.name && removeBlog()}
       <br />
+      <Comments blogId={blog.id} comments={blog.comments} />
     </div>
   );
 };
