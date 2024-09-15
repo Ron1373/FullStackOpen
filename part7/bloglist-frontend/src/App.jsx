@@ -1,4 +1,10 @@
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+  useMatch,
+} from "react-router-dom";
 
 import { useContext, useEffect } from "react";
 import UserContext from "./components/UserContext";
@@ -11,6 +17,7 @@ import blogService from "./services/blogs";
 
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
+import User from "./views/User";
 
 const App = () => {
   const navigate = useNavigate();
@@ -46,6 +53,10 @@ const App = () => {
         </div>
 
         <Routes>
+          <Route
+            path="/users/:id"
+            element={user ? <User /> : <Navigate replace to="/login" />}
+          />
           <Route
             path="/users"
             element={user ? <Users /> : <Navigate replace to="/login" />}
