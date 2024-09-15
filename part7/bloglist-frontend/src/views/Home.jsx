@@ -53,11 +53,7 @@ const Home = () => {
       <Togglable showButtonLabel="Create New Blog" hideButtonLabel="cancel">
         <BlogForm handleAddBlog={handleAddBlog} />
       </Togglable>
-      {isLoading ? (
-        <p>Loading blogs...</p>
-      ) : (
-        <BlogList blogs={blogs} user={user} />
-      )}
+      {isLoading ? <p>Loading blogs...</p> : <BlogList blogs={blogs} />}
     </div>
   );
 };

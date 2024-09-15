@@ -1,10 +1,4 @@
-import {
-  Routes,
-  Route,
-  useNavigate,
-  Navigate,
-  useMatch,
-} from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 import { useContext, useEffect } from "react";
 import UserContext from "./components/UserContext";
@@ -18,6 +12,7 @@ import blogService from "./services/blogs";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import User from "./views/User";
+import Blog from "./views/Blog";
 
 const App = () => {
   const navigate = useNavigate();
@@ -32,7 +27,7 @@ const App = () => {
     } else {
       navigate("/login");
     }
-  }, [userDispatch]);
+  }, []);
 
   if (user) {
     return (
@@ -60,6 +55,12 @@ const App = () => {
           <Route
             path="/users"
             element={user ? <Users /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/blogs/:id"
+            element={
+              user ? <Blog user={user} /> : <Navigate replace to="/login" />
+            }
           />
           <Route
             path="/"
