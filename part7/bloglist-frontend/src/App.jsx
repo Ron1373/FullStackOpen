@@ -13,6 +13,7 @@ import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import User from "./views/User";
 import Blog from "./views/Blog";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const navigate = useNavigate();
@@ -33,20 +34,7 @@ const App = () => {
     return (
       <>
         <Notification notificationMessage={notification} />
-
-        <div>
-          <p>{user.name} logged in</p>
-          <button
-            onClick={() => {
-              userDispatch({ type: "LOGOUT" });
-              window.localStorage.removeItem("loginDetails");
-              navigate("/login");
-            }}
-          >
-            Log out
-          </button>
-        </div>
-
+        <Navbar user={user} userDispatch={userDispatch} />
         <Routes>
           <Route
             path="/users/:id"

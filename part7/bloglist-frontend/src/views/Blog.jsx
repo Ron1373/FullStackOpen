@@ -1,5 +1,5 @@
 import blogService from "../services/blogs";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import NotificationContext from "../components/NotificationContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 const Blog = ({ user }) => {
   const id = useParams().id;
   const [notification, notificationDispatch] = useContext(NotificationContext);
-  const [visible, setVisible] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 

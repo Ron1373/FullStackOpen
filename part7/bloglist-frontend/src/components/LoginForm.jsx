@@ -23,7 +23,7 @@ const LoginForm = () => {
       setPassword("");
       window.localStorage.setItem("loginDetails", JSON.stringify(user));
       blogService.setToken(user.token);
-      navigate("/users");
+      navigate("/");
     } catch (error) {
       notificationDispatch({ type: "ERROR", payload: "Wrong credentials." });
       setTimeout(() => {
