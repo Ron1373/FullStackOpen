@@ -1,92 +1,69 @@
-import { useEffect, useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
-import BlogList from "./components/BlogList";
-import LoginForm from "./components/LoginForm";
-import Notification from "./components/Notification";
-import BlogForm from "./components/BlogForm";
-import Togglable from "./components/Togglable";
+import { useContext, useEffect } from "react";
+import UserContext from "./components/UserContext";
+import NotificationContext from "./components/NotificationContext";
+
+import Users from "./views/Users";
+import Home from "./views/Home";
 
 import blogService from "./services/blogs";
 
-import NotificationContext from "./components/NotificationContext";
-import UserContext from "./components/UserContext";
+import LoginForm from "./components/LoginForm";
+import Notification from "./components/Notification";
 
 const App = () => {
-  const queryClient = useQueryClient();
-  const { data: blogs, isLoading } = useQuery({
-    queryKey: ["blogs"],
-    queryFn: blogService.getAll,
-  });
+  const navigate = useNavigate();
   const [notification, notificationDispatch] = useContext(NotificationContext);
   const [user, userDispatch] = useContext(UserContext);
-
-  const newBlogMutation = useMutation({
-    mutationFn: blogService.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["blogs"]);
-    },
-  });
-
-  const handleAddBlog = async (newBlog) => {
-    try {
-      blogService.setToken(user.token);
-      newBlogMutation.mutate(newBlog);
-      notificationDispatch({
-        type: "ADD_BLOG",
-        payload: { title: newBlog.title, author: newBlog.author },
-      });
-      setTimeout(() => {
-        notificationDispatch({ type: "CLEAR" });
-      }, 5000);
-    } catch {
-      notificationDispatch({
-        type: "ERROR",
-        payload: "Unable to create new blog",
-      });
-      setTimeout(() => {
-        notificationDispatch({ type: "CLEAR" });
-      }, 5000);
-    }
-  };
 
   useEffect(() => {
     const loginDetails = window.localStorage.getItem("loginDetails");
     if (loginDetails) {
       userDispatch({ type: "LOGIN", payload: JSON.parse(loginDetails) });
       blogService.setToken(JSON.parse(loginDetails).token);
+    } else {
+      navigate("/login");
     }
-  }, []);
+  }, [userDispatch]);
 
-  return (
-    <div>
-      <Notification notificationMessage={notification} />
-      {user === null ? (
-        <LoginForm />
-      ) : (
+  if (user) {
+    return (
+      <>
+        <Notification notificationMessage={notification} />
+
         <div>
           <p>{user.name} logged in</p>
-
           <button
             onClick={() => {
               userDispatch({ type: "LOGOUT" });
               window.localStorage.removeItem("loginDetails");
+              navigate("/login");
             }}
           >
             Log out
           </button>
-          <Togglable showButtonLabel="Create New Blog" hideButtonLabel="cancel">
-            <BlogForm handleAddBlog={handleAddBlog} />
-          </Togglable>
-          {isLoading ? (
-            <p>Loading blogs...</p>
-          ) : (
-            <BlogList blogs={blogs} user={user} />
-          )}
         </div>
-      )}
-    </div>
-  );
+
+        <Routes>
+          <Route
+            path="/users"
+            element={user ? <Users /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/"
+            element={user ? <Home /> : <Navigate replace to="/login" />}
+          />
+        </Routes>
+      </>
+    );
+  } else {
+    return (
+      <Routes>
+        <Route path="*" element={<LoginForm />} />
+      </Routes>
+    );
+  }
 };
 
 export default App;

@@ -78,7 +78,7 @@ const Blog = ({ blog, user }) => {
           </button>
           <br />
           {blog.user.name}
-          {blog.user.name === user.name && removeBlog()}
+          {/* {blog.user.name === user.name && removeBlog()} */}
           <button
             style={{ display: visible ? "block" : "none" }}
             onClick={toggleVisibility}

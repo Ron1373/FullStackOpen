@@ -3,12 +3,15 @@ import blogService from "../services/blogs";
 import loginService from "../services/login";
 import NotificationContext from "./NotificationContext";
 import UserContext from "./UserContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [user, userDispatch] = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [notification, notificationDispatch] = useContext(NotificationContext);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -20,6 +23,7 @@ const LoginForm = () => {
       setPassword("");
       window.localStorage.setItem("loginDetails", JSON.stringify(user));
       blogService.setToken(user.token);
+      navigate("/users");
     } catch (error) {
       notificationDispatch({ type: "ERROR", payload: "Wrong credentials." });
       setTimeout(() => {
