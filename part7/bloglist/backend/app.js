@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === "test") {
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(express.static("dist"));
 
 mongoose
   .connect(config.MONGODB_URI)
