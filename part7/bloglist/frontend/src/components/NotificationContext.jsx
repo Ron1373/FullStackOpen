@@ -3,9 +3,12 @@ import { createContext, useReducer } from "react";
 const notificationReducer = (state, action) => {
   switch (action.type) {
     case "ADD_BLOG":
-      return `A new blog ${action.payload.title} by ${action.payload.author} was added.`;
+      return {
+        message: `A new blog '${action.payload.title}' by ${action.payload.author} was added.`,
+        isSuccessful: true,
+      };
     case "ERROR":
-      return action.payload;
+      return { message: action.payload, isError: true };
     case "CLEAR":
       return "";
     default:

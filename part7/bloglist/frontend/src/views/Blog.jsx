@@ -2,8 +2,9 @@ import blogService from "../services/blogs";
 import { useContext } from "react";
 import NotificationContext from "../components/NotificationContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Comments from "../components/Comments";
+import { Button } from "@mui/material";
 
 const Blog = ({ user }) => {
   const id = useParams().id;
@@ -31,7 +32,10 @@ const Blog = ({ user }) => {
   });
 
   const removeBlog = () => (
-    <button
+    <Button
+      color="error"
+      variant="contained"
+      size="small"
       onClick={async () => {
         try {
           if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
@@ -47,7 +51,7 @@ const Blog = ({ user }) => {
       }}
     >
       Remove
-    </button>
+    </Button>
   );
   if (isLoading) return <p>Loading blog data...</p>;
 
@@ -61,15 +65,19 @@ const Blog = ({ user }) => {
       <a href={blog.url}>{blog.url}</a>
       <br />
       Likes: <span data-testid="likes-count">{blog.likes}</span>
-      <button
+      <Button
+        color="success"
+        variant="contained"
+        size="small"
         onClick={async () => {
           likeBlogMutation.mutate(blog);
         }}
       >
         like
-      </button>
+      </Button>
       <br />
-      Added by {blog.user.name}
+      Added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
+      <br />
       {blog.user.name === user.name && removeBlog()}
       <br />
       <Comments blogId={blog.id} comments={blog.comments} />

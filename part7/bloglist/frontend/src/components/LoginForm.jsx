@@ -4,6 +4,8 @@ import loginService from "../services/login";
 import NotificationContext from "./NotificationContext";
 import UserContext from "./UserContext";
 import { useNavigate } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
+import Notification from "./Notification";
 
 const LoginForm = () => {
   const [user, userDispatch] = useContext(UserContext);
@@ -34,37 +36,34 @@ const LoginForm = () => {
 
   return (
     <div>
+      <Notification />
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="username"></label>
-          <input
-            type="text"
+          <TextField
+            label="username"
             value={username}
             onChange={(event) => {
               setUsername(event.target.value);
             }}
-            id="username"
-            name="username"
             data-testid="username"
           />
         </div>
 
         <div>
-          <label htmlFor="password"></label>
-          <input
+          <TextField
+            label="password"
             type="password"
             value={password}
             onChange={(event) => {
               setPassword(event.target.value);
             }}
-            id="password"
             data-testid="password"
-            name="password"
           />
-
-          <button type="submit">login</button>
         </div>
+        <Button type="submit" variant="contained" color="primary">
+          login
+        </Button>
       </form>
     </div>
   );

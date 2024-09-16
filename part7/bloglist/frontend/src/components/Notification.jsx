@@ -1,12 +1,13 @@
-import PropTypes from "prop-types";
+import { Alert } from "@mui/material";
+import { useContext } from "react";
+import NotificationContext from "./NotificationContext";
 
-const Notification = ({ notificationMessage }) => (
-  <>
-    <p className="notification-msg">{notificationMessage}</p>
-  </>
-);
-
-Notification.propTypes = {
-  notificationMessage: PropTypes.string.isRequired,
+const Notification = () => {
+  const [notification, notificationDispatch] = useContext(NotificationContext);
+  const severity = notification.isSuccessful ? "success" : "error";
+  return notification ? (
+    <Alert severity={severity}>{notification.message}</Alert>
+  ) : null;
 };
+
 export default Notification;

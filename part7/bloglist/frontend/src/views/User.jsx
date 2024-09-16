@@ -1,6 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import userService from "../services/users";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 
 const User = () => {
   const id = useParams().id;
@@ -18,11 +25,19 @@ const User = () => {
     <>
       <h1>{user.name}</h1>
       <h2>Added Blogs</h2>
-      <ul>
-        {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
+      <TableContainer>
+        <Table>
+          <TableBody>
+            {user.blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

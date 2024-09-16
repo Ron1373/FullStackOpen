@@ -1,6 +1,15 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableContainer,
+  Button,
+  TextField,
+} from "@mui/material";
 
 const Comments = ({ blogId, comments }) => {
   const [comment, setComment] = useState("");
@@ -21,20 +30,28 @@ const Comments = ({ blogId, comments }) => {
     <>
       <h2>Comments</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <TextField
+          size="small"
           placeholder="Enter new comment..."
           value={comment}
           onChange={({ target }) => setComment(target.value)}
         />
-        <button type="submit">Add Comment</button>
+        <Button color="success" variant="contained" type="submit">
+          Add Comment
+        </Button>
       </form>
-      {comments ? (
-        <ul>
-          {comments.map((comment) => (
-            <li key={comment}>{comment}</li>
-          ))}
-        </ul>
+      {comments.length ? (
+        <TableContainer>
+          <Table>
+            <TableBody>
+              {comments.map((comment) => (
+                <TableRow key={comment}>
+                  <TableCell>{comment}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       ) : (
         <p>No comments yet.</p>
       )}

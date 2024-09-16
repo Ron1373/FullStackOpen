@@ -1,3 +1,4 @@
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 
 const BlogForm = ({ handleAddBlog }) => {
@@ -14,50 +15,43 @@ const BlogForm = ({ handleAddBlog }) => {
         }}
       >
         <div>
-          <label htmlFor="title">title:</label>
-          <input
-            type="text"
+          <TextField
             value={newBlog.title}
             onChange={(event) => {
               setNewBlog((prev) => ({ ...prev, title: event.target.value }));
             }}
-            id="title"
-            name="title"
-            placeholder="title"
+            label="title"
             data-testid="title"
+            size="small"
           />
         </div>
 
         <div>
-          <label htmlFor="author">author:</label>
-          <input
-            type="text"
+          <TextField
             value={newBlog.author}
             onChange={(event) => {
               setNewBlog((prev) => ({ ...prev, author: event.target.value }));
             }}
-            id="author"
-            name="author"
-            placeholder="author"
+            label="author"
             data-testid="author"
+            size="small"
           />
         </div>
 
         <div>
-          <label htmlFor="url">url:</label>
-          <input
-            type="text"
+          <TextField
             value={newBlog.url}
-            placeholder="url"
+            label="url"
             onChange={(event) => {
               setNewBlog((prev) => ({ ...prev, url: event.target.value }));
             }}
-            name="url"
-            id="url"
             data-testid="url"
+            size="small"
           />
         </div>
-        <button type="submit">Create</button>
+        <Button type="submit" variant="contained" color="success">
+          Create
+        </Button>
       </form>
     </>
   );
