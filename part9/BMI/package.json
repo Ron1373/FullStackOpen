@@ -6,7 +6,7 @@
   "scripts": {
     "ts-node": "ts-node",
     "calculateBmi": "ts-node bmicalculator.ts",
-    "calculateExercise": "ts-node exercisecalculator.ts"
+    "calculateExercises": "ts-node exercisecalculator.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +14,9 @@
   "devDependencies": {
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@types/node": "^22.5.5",
+    "save-dev": "^0.0.1-security"
   }
 }

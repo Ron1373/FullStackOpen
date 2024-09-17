@@ -8,9 +8,23 @@ interface Result {
   ratingDescription: string;
 }
 
-function calculateExercises(exerciseHrs: number[], target: number): Result {
+const parseArguments = (args: string[]) => {
+  let i = 2;
+  const exerciseHrs = [];
+  while (i < args.length) {
+    if (isNaN(Number(args[i]))) {
+      throw new Error("Provided array contains non-numerical elements.");
+    }
+    exerciseHrs.push(Number(args[i]));
+    i++;
+  }
+  return exerciseHrs;
+};
+
+function calculateExercises(exerciseHrs: number[]): Result {
   const avgHrs =
     exerciseHrs.reduce((prev, curr) => prev + curr, 0) / exerciseHrs.length;
+  const target = 2;
   let rating = 1;
   let ratingDescription = "Try harder next time!";
   if (avgHrs - target > 0.2) {
@@ -31,4 +45,13 @@ function calculateExercises(exerciseHrs: number[], target: number): Result {
   };
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const exerciseHrs = parseArguments(process.argv);
+  console.log(calculateExercises(exerciseHrs));
+} catch (error: unknown) {
+  let errorMsg = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMsg += error.message;
+  }
+  console.error(errorMsg);
+}
